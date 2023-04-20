@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  slack: circleci/slack@4.10.1
 
 # Define the jobs we want to run for this project
 jobs:
@@ -10,15 +12,25 @@ jobs:
       - run: mkdir sanity;
       - run: jmeter -n -t Demosix_Prod_Demo_steps.jmx -l sanity/Demosix_Prod_Demo_steps_test.jtl -e -o sanity/Demosix_Prod_Demo -j sanity/jmeter.log
       - run: ls -l
-      - run: grep false sanity/Demosix_Prod_Demo_steps_test.jtl | wc -l
+      - run: echo [$(grep false sanity/Demosix_Prod_Demo_steps_test.jtl | wc -l)] < "0"   
       # run: jmeter -n -t Staging_Appinsight_summery_full.jmx -l /sanity/Staging_Summary_Test2.jtl -e -o /sanity/StagingSummary_Test2
       # run: jmeter -n -t Sonrai_PCAPIAPIs.jmx -l /sanity/PCAPI_TestResult.jtl -e -o /sanity/PCAPI_1
       # run: jmeter -n -t Sonrai_Graphql_staging.jmx -l /tmp/artifacts/runResults4.jtl -e -o /sanity/result2
       - store_artifacts:
          path: sanity
+      - slack/notify:
+         channel: performance-test
+         event: fail
+         mentions: 'In View Job,got to Artificats folder and select .html file'
+         template: basic_fail_1
+      - slack/notify:
+          channel: performance-test
+          event: pass
+          template: basic_success_1
 
 # Orchestrate our job run sequence
 workflows:
   build_and_test:
     jobs:
-      - Sonrai_Demosix_Production
+      - Sonrai_Demosix_Production:
+          context: slack-secrets
