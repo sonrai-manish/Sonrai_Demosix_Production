@@ -13,7 +13,7 @@ jobs:
       - run: jmeter -n -t Demosix_Prod_Demo_steps.jmx -l sanity/Demosix_Prod_Demo_steps_test.jtl -e -o sanity/Demosix_Prod_Demo -j sanity/jmeter.log
       - run: ls -l
       - run: |
-             if [ $(grep false sanity/Demosix_Prod_Demo_steps_test.jtl | wc -l) -lt "0" ]; then
+             if [ $(grep false sanity/Demosix_Prod_Demo_steps_test.jtl | wc -l) -eq "0" ]; then
                echo "pass"
                exit 0
              else 
