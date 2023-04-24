@@ -27,12 +27,12 @@ jobs:
       - store_artifacts:
          path: sanity
       - slack/notify:
-         channel: performance-test
+         channel: performance-production
          event: fail
          mentions: 'To view Result - In View Job,got to Artificats folder and select index.html file'
          template: basic_fail_1
       - slack/notify:
-          channel: performance-test
+          channel: performance-production
           event: pass
           mentions: 'To view Result - In View Job,got to Artificats folder and select index.html file'
           template: basic_success_1
